@@ -91,42 +91,26 @@ function TimesheetEntry() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Create a new object that matches the backend structure
     const timesheetData = {
-      ProjectID: parseInt(formData.projectId),
-      SubProjectID: parseInt(formData.subprojectId),
-      JiraSnowID: formData.jiraId,
-      TaskDescription: formData.taskDescription,
-      HoursSpent: parseInt(formData.hoursSpent),
-      Comments: formData.comments
+        ProjectID: parseInt(formData.projectId),
+        SubProjectID: parseInt(formData.subprojectId),
+        JiraSnowID: formData.jiraId,
+        TaskDescription: formData.taskDescription,
+        HoursSpent: parseInt(formData.hoursSpent),
+        Comments: formData.comments
     };
 
-    console.log('Submitting timesheet data:', timesheetData);
-
     try {
-      const response = await api.post('/timesheet', timesheetData);
-      console.log('Timesheet submitted successfully:', response.data);
-      alert('Timesheet entry submitted successfully!');
-
-      // Reset form
-      setFormData({
-        projectId: '',
-        subprojectId: '',
-        jiraId: '',
-        taskDescription: '',
-        hoursSpent: 0,
-        comments: ''
-      });
-      
+        const response = await api.post('/timesheet', timesheetData);
+        console.log('Timesheet submitted successfully:', response.data);
+        navigate('/thank-you');
     } catch (error) {
-      console.error('Error submitting timesheet:', error.response?.data || error.message);
-      alert('Failed to submit timesheet entry. Please try again.');
-      
+        console.error('Error submitting timesheet:', error.response?.data || error.message);
+        alert('Failed to submit timesheet entry. Please try again.');
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
 
   if (isLoading && projects.length === 0) return <div className={styles.loading}>Loading projects...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
