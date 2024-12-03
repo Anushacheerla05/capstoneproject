@@ -1,4 +1,3 @@
-/*timesheetapp schema*/
 CREATE TABLE Employee (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     Type VARCHAR(255),
