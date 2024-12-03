@@ -1,7 +1,6 @@
 // src/components/TimesheetEntry.js
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import styles from './TimesheetEntry.module.css';
 
@@ -18,7 +17,6 @@ function TimesheetEntry() {
   const [subprojects, setSubprojects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProjects();
@@ -93,7 +91,6 @@ function TimesheetEntry() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     const timesheetData = {
         ProjectID: parseInt(formData.projectId),
         SubProjectID: parseInt(formData.subprojectId),
