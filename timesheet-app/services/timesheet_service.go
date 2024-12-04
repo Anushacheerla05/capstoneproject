@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"time"
 	"timesheet-app/database"
 	"timesheet-app/models"
@@ -9,7 +8,7 @@ import (
 
 func SubmitTimesheet(timesheet models.TimesheetDetail) error {
 	db := database.GetDB()
-	query := "INSERT INTO Timesheets (ProjectID,SubProjectID, JiraSnowID, TaskDescription, HoursSpent, Comments, CreatedAt) VALUES (?,?, ?,?,?,?,?)"
+	query := "INSERT INTO Timesheets (ProjectID,SubProjectID, JiraSnowID, TaskDescription, HoursSpent, Comments,CreatedAt) VALUES (?,?, ?,?,?,?,?)"
 	args := []interface{}{
 		timesheet.ProjectID,
 		timesheet.SubProjectID,
@@ -20,7 +19,5 @@ func SubmitTimesheet(timesheet models.TimesheetDetail) error {
 		time.Now(),
 	}
 	_, err := db.Exec(query, args...)
-	fmt.Println("query: ", query)
-	fmt.Println("args: ", args)
 	return err
 }
