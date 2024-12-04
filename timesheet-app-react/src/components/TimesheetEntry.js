@@ -28,7 +28,7 @@ function TimesheetEntry() {
     setIsLoading(true);
     try {
       const response = await api.get('/projects');
-      setProjects(response.data || []);
+      setProjects(response.data);
     } catch (err) {
       setError('Failed to fetch projects. Please try again.');
       console.error('Error fetching projects:', err);
@@ -46,9 +46,11 @@ function TimesheetEntry() {
     try {
       const response = await api.get(`/subprojects?project_id=${projectId}`);
       
+      // Check if response and response.data are valid
       if (response && Array.isArray(response.data)) {
         setSubprojects(response.data);
         
+        // If no subprojects are found, set subprojectId to the projectId
         if (response.data.length === 0) {
           setFormData(prev => ({ ...prev, subprojectId: projectId }));
           alert('No subprojects found for this project. You can submit using the project ID.');
@@ -56,13 +58,11 @@ function TimesheetEntry() {
       } else {
         console.error('Unexpected response format:', response);
         setError('No subprojects found for this project.');
-        setSubprojects([]);
       }
       
     } catch (err) {
       setError('Failed to fetch subprojects. Please try again.');
       console.error('Error fetching subprojects:', err);
-      setSubprojects([]);
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +82,7 @@ function TimesheetEntry() {
   };
 
   const handleHoursChange = (increment) => {
+    // Ensure HoursSpent does not exceed 10
     const newHoursSpent = Math.max(0, Math.min(10, parseFloat(formData.hoursSpent || 0) + increment));
     setFormData(prev => ({
       ...prev,
@@ -112,7 +113,7 @@ function TimesheetEntry() {
     } finally {
         setIsLoading(false);
     }
-  };
+};
 
   if (isLoading && projects.length === 0) return <div className={styles.loading}>Loading projects...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
@@ -132,7 +133,7 @@ function TimesheetEntry() {
               required
             >
               <option value="">Select a project</option>
-              {projects && projects.length > 0 && projects.map(project => (
+              {projects.map(project => (
                 <option key={project.project_id} value={project.project_id}>
                   {project.project_id} - {project.project_name}
                 </option>
@@ -151,7 +152,7 @@ function TimesheetEntry() {
               disabled={!formData.projectId}
             >
               <option value="">Select a subproject</option>
-              {subprojects && subprojects.length > 0 ? (
+              {subprojects.length > 0 ? (
                 subprojects.map(subproject => (
                   <option key={subproject.sub_project_id} value={subproject.sub_project_id}>
                     {subproject.sub_project_id} - {subproject.sub_project_name}
@@ -202,7 +203,7 @@ function TimesheetEntry() {
                 onChange={handleInputChange}
                 step="0.5"
                 min="0"
-                max="10"
+                max="10" // Limit input to a maximum of 10 hours
                 required
               />
               <button type="button" onClick={() => handleHoursChange(0.5)}>+</button>
